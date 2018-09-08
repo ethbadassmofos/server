@@ -1,11 +1,11 @@
 const { hash: hashEnsName } = require('eth-ens-namehash')
 
-module.exports = ({ addresses, nodes }) => ({
+module.exports = getData => ({
   Query: {
     ensNode: (_, { name }, ctx) => {
       const hash = hashEnsName(name)
 
-      const ret = nodes[hash]
+      const ret = getData().nodes[hash]
 
       if (!ret) return null
 
@@ -14,7 +14,7 @@ module.exports = ({ addresses, nodes }) => ({
       return ret
     },
     ethereumAddress: (_, { address }, ctx) => {
-      const ret = addresses[address]
+      const ret = getData().addresses[address]
 
       if (!ret) return null
 
