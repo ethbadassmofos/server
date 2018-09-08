@@ -1,7 +1,7 @@
 const Koa = require('koa')
 const { ApolloServer } = require('apollo-server-koa')
-const got = 'got'
 const { Storage } = require('@google-cloud/storage')
+const typeDefs = require('./typeDefs')
 
 const { PORT, NODE_ENV } = process.env
 
@@ -52,6 +52,12 @@ const init = async () => {
     data = require('./data/dump.json')
     dataReady = true
   }
+  if (!data.addresses || !data.nodes) {
+    console.error('Invalid data')
+    console.error(data)
+    return process.exit(1)
+  }
+  console.log(`Loaded data dump. ${Object.keys(data.addresses).length} addresses and ${Object.keys(data.nodes).length}.`)
 
   const typeDefs = require('./typeDefs')
   const resolvers = require('./resolvers')(() => data)
