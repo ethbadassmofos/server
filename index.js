@@ -25,33 +25,36 @@ const init = async () => {
 
     const strBuffer = ''
 
-    file.createReadStream()
-      .on('error', err => {
-        console.error('Error download dump', err)
-        process.exit(-1)
-      })
-      .on('response', res => {
-        console.log('Connected to bucket, download....')
-      })
-      .on('data', data => {
-        strBuffer += data.toString()
-      })
-      .on('end', () => {
-        try {
-          data = JSON.parse(buffer)
-          if (!data.addresses || !data.nodes) {
-            console.error('Invalid data')
-            console.error(data)
-            return process.exit(-1)
-          }
-          console.log(`Loaded data dump. ${Object.keys(data.addresses).length} addresses and ${Object.keys(data.nodes).length}.`)
-        } catch (err) {
-          console.error('Error parsing dump', err)
-          process.exit(-1)
-        }
+    data = { addresses: {}, nodes: {} }
+    dataReady = true
 
-        dataReady = true
-      })
+    // file.createReadStream()
+    //   .on('error', err => {
+    //     console.error('Error download dump', err)
+    //     process.exit(-1)
+    //   })
+    //   .on('response', res => {
+    //     console.log('Connected to bucket, download....')
+    //   })
+    //   .on('data', data => {
+    //     strBuffer += data.toString()
+    //   })
+    //   .on('end', () => {
+    //     try {
+    //       data = JSON.parse(buffer)
+    //       if (!data.addresses || !data.nodes) {
+    //         console.error('Invalid data')
+    //         console.error(data)
+    //         return process.exit(-1)
+    //       }
+    //       console.log(`Loaded data dump. ${Object.keys(data.addresses).length} addresses and ${Object.keys(data.nodes).length}.`)
+    //     } catch (err) {
+    //       console.error('Error parsing dump', err)
+    //       process.exit(-1)
+    //     }
+    //
+    //     dataReady = true
+    //   })
   }
 
   if (!data && !inProduction) {
