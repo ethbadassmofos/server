@@ -39,6 +39,12 @@ const init = async () => {
       .on('end', () => {
         try {
           data = JSON.parse(buffer)
+          if (!data.addresses || !data.nodes) {
+            console.error('Invalid data')
+            console.error(data)
+            return process.exit(-1)
+          }
+          console.log(`Loaded data dump. ${Object.keys(data.addresses).length} addresses and ${Object.keys(data.nodes).length}.`)
         } catch (err) {
           console.error('Error parsing dump', err)
           process.exit(-1)
@@ -52,12 +58,6 @@ const init = async () => {
     data = require('./data/dump.json')
     dataReady = true
   }
-  if (!data.addresses || !data.nodes) {
-    console.error('Invalid data')
-    console.error(data)
-    return process.exit(1)
-  }
-  console.log(`Loaded data dump. ${Object.keys(data.addresses).length} addresses and ${Object.keys(data.nodes).length}.`)
 
   const typeDefs = require('./typeDefs')
   const resolvers = require('./resolvers')(() => data)
