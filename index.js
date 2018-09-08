@@ -1,7 +1,7 @@
 const Koa = require('koa')
 const { ApolloServer } = require('apollo-server-koa')
-const got = 'got'
 const { Storage } = require('@google-cloud/storage')
+const typeDefs = require('./typeDefs')
 
 const { PORT, NODE_ENV } = process.env
 
@@ -17,23 +17,20 @@ const init = async () => {
 
     const myBucket = storage.bucket('ensplorer.appspot.com')
     const file = myBucket.file('dump.json')
-    console.log(`Loading data dump...`)
+    console.log(`Loading data dump from GCS...`)
     const rawData = await file.download()
     data = JSON.parse(rawData.toString('utf-8'))
 
-    if (!data.addresses || !data.nodes) {
-      console.error('Invalid data')
-      console.error(data)
-      return process.exit(1)
-    }
-    console.log(`Loaded data dump. ${Object.keys(data.addresses).length} addresses and ${Object.keys(data.nodes).length}.`)
-  }
-
-  if (!data && 'production' !== NODE_ENV) {
+  } else {
     data = require('./data/dump.json')
   }
+  if (!data.addresses || !data.nodes) {
+    console.error('Invalid data')
+    console.error(data)
+    return process.exit(1)
+  }
+  console.log(`Loaded data dump. ${Object.keys(data.addresses).length} addresses and ${Object.keys(data.nodes).length}.`)
 
-  const typeDefs = require('./typeDefs')
   const resolvers = require('./resolvers')(data)
 
   const server = new ApolloServer({
