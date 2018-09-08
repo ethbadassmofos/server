@@ -17,12 +17,16 @@ const init = async () => {
 
     const myBucket = storage.bucket('ensplorer.appspot.com')
     const file = myBucket.file('dump.json')
+    console.log(`Loading data dump...`)
+    const rawData = await file.download()
+    data = JSON.parse(rawData.toString('utf-8'))
 
-    const url = await file.getSignedUrl({ action: 'read' })
-
-    console.log(`Loading data dump from: ${url}`)
-
-    data = await got(url, { type: 'json' })
+    if (!data.addresses || !data.nodes) {
+      console.error('Invalid data')
+      console.error(data)
+      return process.exit(1)
+    }
+    console.log(`Loaded data dump. ${Object.keys(data.addresses).length} addresses and ${Object.keys(data.nodes).length}.`)
   }
 
   if (!data && 'production' !== NODE_ENV) {
