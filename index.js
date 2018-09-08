@@ -23,7 +23,7 @@ const init = async () => {
     const myBucket = storage.bucket('ensplorer.appspot.com')
     const file = myBucket.file('dump.json')
 
-    const strBuffer = ''
+    let strBuffer = ''
 
     file.createReadStream()
       .on('error', err => {
@@ -38,7 +38,7 @@ const init = async () => {
       })
       .on('end', () => {
         try {
-          data = JSON.parse(buffer)
+          data = JSON.parse(strBuffer)
           if (!data.addresses || !data.nodes) {
             console.error('Invalid data')
             console.error(data)
