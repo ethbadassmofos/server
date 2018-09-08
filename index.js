@@ -8,7 +8,7 @@ const { NODE_ENV } = process.env
 const init = async () => {
   let data
 
-  console.log(`Node environment: ${NODE_ENV}`)
+  console.log(`Node environment: ${NODE_ENV || 'development'}`)
 
   if ('production' === NODE_ENV) {
     const storage = new Storage({
@@ -32,13 +32,13 @@ const init = async () => {
   const typeDefs = require('./typeDefs')
   const resolvers = require('./resolvers')(data)
 
-  const app = new Koa()
-  server.applyMiddleware({ app })
-
   const server = new ApolloServer({
     typeDefs,
     resolvers,
   })
+
+  const app = new Koa()
+  server.applyMiddleware({ app })
 
   app.listen({ port: 4000 }, () =>
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`),

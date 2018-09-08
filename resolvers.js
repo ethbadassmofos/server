@@ -1,6 +1,6 @@
 const { hash: hashEnsName } = require('eth-ens-namehash')
 
-module.exports = ({ addresses, nodes }) => {
+module.exports = ({ addresses, nodes }) => ({
   Query: {
     ensNode: (_, { name }, ctx) => {
       const hash = hashEnsName(name)
@@ -59,4 +59,4 @@ module.exports = ({ addresses, nodes }) => {
   Address: {
     address: a => a
   }
-}
+})
