@@ -1,4 +1,3 @@
-sudo: required
 dist: trusty
 language: node_js
 cache: yarn
@@ -6,7 +5,7 @@ branches:
   only:
   - master
 node_js:
-  - stable
+  - 8
 script:
   - openssl aes-256-cbc -K $ENC_KEY -iv $ENC_IV -in .deploy/gae.json.enc -out .deploy/gae.json -d
 deploy:
