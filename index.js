@@ -72,7 +72,7 @@ const init = async () => {
   const app = new Koa()
 
   app.use(cors({
-    origin: true,
+    origin: '*',
     credentials: true,
   }))
 
