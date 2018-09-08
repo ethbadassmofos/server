@@ -1,0 +1,50 @@
+{
+  "addresses": {
+    "0xdbfeeef46e9cc06136c3da02a9799bccc125bb39": {
+      "history": [
+        {
+          "block": 1,
+          "action": "owns",
+          "node": "nodehash1"
+        },
+        {
+          "block": 1,
+          "action": "owns",
+          "node": "nodehash2"
+        },
+        {
+          "block": 2,
+          "action": "lost",
+          "node": "nodehash2"
+        },
+        {
+          "block": 4,
+          "action": "own",
+          "node": "0xc3c98353b9c754fcea89580bd76954ba22e42ab2cec13cb7b8b10db8447ee229"
+        }
+      ],
+      "current_nodes": [
+        "nodehash1",
+        "0xc3c98353b9c754fcea89580bd76954ba22e42ab2cec13cb7b8b10db8447ee229"
+      ]
+    }
+  },
+  "nodes": {
+    "0xc3c98353b9c754fcea89580bd76954ba22e42ab2cec13cb7b8b10db8447ee229": {
+      "history": [
+        {
+          "block": 3801,
+          "action": "owns",
+          "address": "0xdbfeeef46e9cc06136c3da02a9799bccc125bb39"
+        },
+        {
+          "block": 3802,
+          "action": "owns",
+          "address": "0xdbfeeef46e9cc06136c3da02a9799bccc125bb39"
+        }
+      ],
+      "current_address": "0xdbfeeef46e9cc06136c3da02a9799bccc125bb39"
+    }
+  }
+}
+
