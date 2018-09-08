@@ -3,7 +3,7 @@ const { ApolloServer } = require('apollo-server-koa')
 const got = 'got'
 const { Storage } = require('@google-cloud/storage')
 
-const { NODE_ENV } = process.env
+const { PORT, NODE_ENV } = process.env
 
 const init = async () => {
   let data
@@ -40,7 +40,7 @@ const init = async () => {
   const app = new Koa()
   server.applyMiddleware({ app })
 
-  app.listen({ port: 4000 }, () =>
+  app.listen({ port: PORT || 4000 }, () =>
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`),
   )
 }
