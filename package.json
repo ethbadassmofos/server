@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^2.0.0",
+    "@koa/cors": "^2.2.2",
     "apollo-server-koa": "^2.0.6",
     "eth-ens-namehash": "^2.0.8",
     "got": "^9.2.1",
