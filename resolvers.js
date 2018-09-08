@@ -1,8 +1,6 @@
 const { hash: hashEnsName } = require('eth-ens-namehash')
 
-const { addresses, nodes } = require('./data/dump.json')
-
-module.exports = {
+module.exports = ({ addresses, nodes }) => {
   Query: {
     ensNode: (_, { name }, ctx) => {
       const hash = hashEnsName(name)
