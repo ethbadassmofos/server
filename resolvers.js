@@ -1,25 +1,64 @@
-const dump = require('./dump.json')
+const { hash: hashEnsName } = require('eth-ens-namehash')
+
+const { addresses, nodes } = require('./data')
 
 module.exports = {
   Query: {
-    ensNode: (_, { node }) => null,
-    ethereumAddress: (_, { address }) => (
-      dump.addresses[address]
-        ? [ address, dump.addresses[address] ]
-        : null
-    ),
+    ensNode: (_, { name }, ctx) => {
+      const hash = hashEnsName(name)
+
+      const ret = nodes[hash]
+
+      if (!ret) return null
+
+      ctx.node = { name, nameHash: hash }
+
+      return ret
+    },
+    ethereumAddress: (_, { address }, ctx) => {
+      const ret = addresses[address]
+
+      if (!ret) return null
+
+      ctx.address = address
+
+      return ret
+    },
   },
   EthereumAddress: {
-    address: ([ address ]) => address,
-    nodeActions: ([ _, { history } ]) => history,
-    nodesOwned: ([ _, { current_nodes } ]) => current_nodes.length
+    nodeHistory: ({ history }) => history,
+    nodes: ({ current_nodes }) => current_nodes
   },
-  NodeAction: {
-    block: data => data[0],
-    action: data => data[1],
-    node: data => data[2],
+  EnsNode: {
+    node: (_, __, { node }) => node,
+  	owner: ({ current_address }) => current_address,
+		ownerHistory: ({ history }) => history,
+  },
+  NodeEvent: {
+    node: ({ node }, _, ctx) => node ? { nameHash: node } : ctx.node,
+    actor: ({ address }, _, ctx) => address || ctx.address,
   },
   Node: {
-    node: n => n
+    name: data => {
+      switch (typeof data) {
+        case 'object':
+          return data.name
+        default:
+          return null
+      }
+    },
+    nameHash: data => {
+      switch (typeof data) {
+        case 'object':
+          return data.nameHash
+        case 'string':
+          return data
+        default:
+          return null
+      }
+    }
   },
+  Address: {
+    address: a => a
+  }
 }

@@ -1,22 +1,23 @@
 const { gql } = require('apollo-server-koa')
 
 module.exports = gql`
-type Owner {
+type Address {
 	address: String
-	block: Int
-  txId: String
 }
 
 type Node {
   name: String
+	nameHash: String
   label: String
   node: String
 	subNodes: [Node]
 }
 
-type NodeAction {
-  node: Node
+type NodeEvent {
+	node: Node
+	actor: Address
   block: Int
+	tx: String
 	action: String
 }
 
@@ -27,18 +28,19 @@ type Resolver {
 }
 
 type EnsNode {
-	ownerHistory: [Owner]
+	node: Node,
+  owner: Address,
+	ownerHistory: [NodeEvent]
 	resolverHistory: [Resolver]
 }
 
 type EthereumAddress {
-	address: String
-	nodeActions: [NodeAction]
-	nodesOwned: Int
+	nodeHistory: [NodeEvent]
+	nodes: [Node]
 }
 
 type Query {
-	ensNode(node: String!): EnsNode
+	ensNode(name: String!): EnsNode
 	ethereumAddress(address: String!): EthereumAddress
 }
 `
