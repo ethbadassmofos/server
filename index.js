@@ -64,6 +64,7 @@ const init = async () => {
   const resolvers = require('./resolvers')(() => data)
 
   const server = new ApolloServer({
+    introspection: true,
     typeDefs,
     resolvers,
   })
