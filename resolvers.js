@@ -22,6 +22,7 @@ module.exports = getData => ({
 
       return ret
     },
+    ownerStats: (_, { limit }) => getData().topOwners.slice(0, limit)
   },
   EthereumAddress: {
     nodeHistory: ({ history }) => history,
@@ -31,6 +32,10 @@ module.exports = getData => ({
     node: (_, __, { node }) => node,
   	owner: ({ current_address }) => current_address,
 		ownerHistory: ({ history }) => history,
+  },
+  OwnerStat: {
+    owner: ({ address }) => address,
+    nodesOwned: ({ total }) => total,
   },
   NodeEvent: {
     node: ({ node }, _, ctx) => node ? { nameHash: node } : ctx.node,

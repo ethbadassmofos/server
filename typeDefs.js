@@ -39,8 +39,14 @@ type EthereumAddress {
 	nodes: [Node]
 }
 
+type OwnerStat {
+	owner: Address
+	nodesOwned: Int
+}
+
 type Query {
 	ensNode(name: String!): EnsNode
 	ethereumAddress(address: String!): EthereumAddress
+	ownerStats(limit: Int): [OwnerStat]
 }
 `

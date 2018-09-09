@@ -2,7 +2,9 @@ const Koa = require('koa')
 const cors = require('@koa/cors')
 const { ApolloServer } = require('apollo-server-koa')
 const { Storage } = require('@google-cloud/storage')
+
 const typeDefs = require('./typeDefs')
+const processRawData = require('./processor')
 
 const { PORT, NODE_ENV } = process.env
 
@@ -12,7 +14,6 @@ const inProduction = ('production' === NODE_ENV)
 
 const init = async () => {
   let data
-  let dataReady = false
 
   if (inProduction) {
     const storage = new Storage({
@@ -34,30 +35,21 @@ const init = async () => {
       .on('response', res => {
         console.log('Connected to bucket, download....')
       })
-      .on('data', data => {
-        strBuffer += data.toString()
+      .on('data', bytes => {
+        strBuffer += bytes.toString()
       })
       .on('end', () => {
         try {
-          data = JSON.parse(strBuffer)
-          if (!data.addresses || !data.nodes) {
-            console.error('Invalid data')
-            console.error(data)
-            return process.exit(-1)
-          }
-          console.log(`Loaded data dump. ${Object.keys(data.addresses).length} addresses and ${Object.keys(data.nodes).length}.`)
+          data = processRawData(JSON.parse(strBuffer))
         } catch (err) {
           console.error('Error parsing dump', err)
           process.exit(-1)
         }
-
-        dataReady = true
       })
   }
 
   if (!data && !inProduction) {
-    data = require('./data/dump.json')
-    dataReady = true
+    data = processRawData(require('./data/dump.json'))
   }
 
   const typeDefs = require('./typeDefs')
@@ -77,7 +69,7 @@ const init = async () => {
   }))
 
   app.use(async ({ response }, next) => {
-    if (!dataReady) {
+    if (!data) {
       response.type = 'text/plain';
       response.body = 'Data not yet ready!';
     } else {
